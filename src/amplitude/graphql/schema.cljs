@@ -59,7 +59,7 @@
               :or   {key-type :String
                      shape    [:id]}}]
   (when-not (empty? shape)
-    (let [variable-id (->> (csk/->snake_case_string key)
+    (let [variable-id (->> key
                            (str "$")
                            (keyword))]
       (graphql-query
@@ -76,7 +76,7 @@
                     {:variable/name :$nextToken
                      :variable/type :String}]
         :queries   [[(csk/->camelCaseKeyword query-field)
-                     {(csk/->snake_case_string key) variable-id
+                     {key                           variable-id
                       :sortDirection                :$sortDirection
                       :nextToken                    :$nextToken
                       :limit                        :$limit
