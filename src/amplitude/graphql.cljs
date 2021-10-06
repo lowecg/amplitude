@@ -55,6 +55,7 @@
                               :as   param}]
   (cond
     (= op :get) input
+    (= op :publish) input
     (= op :search)
     (u/remove-nils
      (merge param
