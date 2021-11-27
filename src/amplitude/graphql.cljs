@@ -57,6 +57,7 @@
     (= op :get) input
     (= op :publish) input
     (= op :duplicate) input
+    (= op :send) input
     (= op :search)
     (u/remove-nils
      (merge param
