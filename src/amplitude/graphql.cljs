@@ -71,15 +71,19 @@
       :limit  (or limit 100)})))
 
 (defn- invoke*
-  ([query-str param]
+  ([auth-mode query-str param]
    (let [operation (if (empty? param)
                     (api/graphqlOperation query-str)
                     (api/graphqlOperation query-str (clj->js param)))]
+     (println "set auth-mode" auth-mode)
+     (set! (.-authMode operation) auth-mode)
      (.. API (graphql operation))))
-  ([query-str param on-success on-error]
+  ([auth-mode query-str param on-success on-error]
    (let [operation (if (empty? param)
                      (api/graphqlOperation query-str)
                      (api/graphqlOperation query-str (clj->js param)))]
+     (println "set auth-mode" auth-mode)
+     (set! (.-authMode operation) auth-mode)
      (-> (.. API (graphql operation))
          (.then on-success)
          (.catch on-error)))))
@@ -89,13 +93,15 @@
 
 (defn- invoke
   [{:keys [op query entity param on-success on-error
-           return-promise?]
-    :or   {on-error default-on-error
-           return-promise? false}}]
+           return-promise?
+           auth-mode]
+    :or   {on-error        default-on-error
+           return-promise? false
+           auth-mode       "AMAZON_COGNITO_USER_POOLS"}}]
   (let [param (xform-param op entity param)]
     (if return-promise?
-      (invoke* query param)
-      (invoke* query
+      (invoke* auth-mode query param)
+      (invoke* auth-mode query
                param
                (fn [data]
                  (->> (xform-output data op entity)
@@ -121,7 +127,8 @@
 (defn create!
   [entity {:keys [input on-create
                   invalidate-cache? shape
-                  on-error]
+                  on-error
+                  auth-mode]
            :or   {on-create         log/stash!
                   invalidate-cache? true
                   on-error          log/error}}]
@@ -133,7 +140,8 @@
                          (when invalidate-cache?
                            (delete-cache! entity))
                          (on-create record))
-           :on-error   on-error}))
+           :on-error   on-error
+           :auth-mode  auth-mode}))
 
 (defn list
   [entity {:keys [on-list cache? filter shape limit]
