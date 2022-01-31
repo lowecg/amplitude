@@ -1,7 +1,7 @@
 (ns amplitude.log
   (:require
    [amplitude.util :as u]
-   ["aws-amplify" :refer [Logger]]))
+   ["@aws-amplify/core" :refer [Logger]]))
 
 (def logger (Logger. "amplitude" "DEBUG"))
 
