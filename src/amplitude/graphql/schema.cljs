@@ -30,11 +30,11 @@
     (str "list" (caps entity) "s")
     (str (name op) (caps entity))))
 
-(defn- op-name [op entity]
+(defn op-name [op entity]
   (->> (method-name op entity)
        (csk/->PascalCaseString)))
 
-(defn- method-id [op entity]
+(defn method-id [op entity]
   (->> (op-name op entity)
        (csk/->camelCaseKeyword)))
 
@@ -49,7 +49,7 @@
                    {:id :$id}
                    (as-shape shape)]]})))
 
-(defn- as-filter-model [entity]
+(defn as-filter-model [entity]
   (keyword (str "Model"
                 (csk/->PascalCase (name entity))
                 "FilterInput")))

@@ -56,9 +56,11 @@
   (cond
     (= op :get) input
     (= op :publish) input
+    (= op :verify) input
     (= op :duplicate) input
     (= op :assign) input
     (= op :send) input
+    (= op :state-machine) input
     (= op :search)
     (u/remove-nils
      (merge param
@@ -92,7 +94,7 @@
 (defn default-on-error [xs]
   (log/error ::gql-error xs))
 
-(defn- invoke
+(defn invoke
   [{:keys [op query entity param on-success on-error
            return-promise?
            auth-mode]
